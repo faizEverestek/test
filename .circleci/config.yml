@@ -4,7 +4,7 @@ version: 2.1
 # Orbs
 # --------------------------------------------------------
 orbs:
-  aws-cli: circleci/aws-cli@4.1.2
+  aws-cli: circleci/aws-cli@5.4.1
 
 # --------------------------------------------------------
 # Executors
@@ -70,10 +70,8 @@ jobs:
       # AWS CLI Setup
       # --------------------------
       - aws-cli/setup:
-          aws-access-key-id: AWS_ACCESS_KEY
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-          aws-session-token: AWS_SESSION_KEY
-          aws-region: AWS_REGION
+          profile-name: default
+          region: AWS_REGIONĀ
 
       - run:
           name: Install Dependencies
