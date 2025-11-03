@@ -44,6 +44,10 @@ jobs:
             echo "Current directory structure:"
             ls -lR
 
+            echo "$(pwd)"
+            echo "$(pwd)/build-scripts/get_version.sh"
+            realpath build-scripts/get_version.sh
+
       - run:
           name: Build Application
           command: |
