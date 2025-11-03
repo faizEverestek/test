@@ -70,8 +70,10 @@ jobs:
       # AWS CLI Setup
       # --------------------------
       - aws-cli/setup:
-          profile-name: default
-          region: AWS_REGION
+          aws-access-key-id: AWS_ACCESS_KEY
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          aws-session-token: AWS_SESSION_KEY
+          aws-region: AWS_REGION
 
       - run:
           name: Install Dependencies
