@@ -86,9 +86,38 @@ generate_app_version() {
     exit 1
   fi
 
-  BASE_VERSION=$(npm pkg get version | tr -d '"')
+  log_info "Using npm version: $(npm -v)"
+  log_info "Checking for package.json in: $(pwd)"
+
+  if [[ ! -f "package.json" ]]; then
+    log_error "package.json not found in $(pwd). Please ensure you run this script from the project root."
+    exit 1
+  fi
+
+  # Try fetching version safely
+  local raw_version
+  raw_version=$(npm pkg get version 2>>"$LOG_FILE" || echo "")
+
+  if [[ -z "$raw_version" || "$raw_version" == "{}" ]]; then
+    log_warn "npm pkg get version failed or returned empty. Falling back to jq."
+
+    if ! command -v jq &>/dev/null; then
+      log_error "'jq' is required for fallback but not installed."
+      exit 1
+    fi
+
+    raw_version=$(jq -r '.version // empty' package.json 2>>"$LOG_FILE")
+  fi
+
+  if [[ -z "$raw_version" ]]; then
+    log_error "Failed to extract version from package.json."
+    exit 1
+  fi
+
+  BASE_VERSION=$(echo "$raw_version" | tr -d '"')
   log_info "Base version from package.json: $BASE_VERSION"
 
+  # Check versioning script
   if [[ ! -x "./build-scripts/get_version.sh" ]]; then
     log_error "Missing versioning script: ./build-scripts/get_version.sh"
     exit 1
@@ -162,7 +191,7 @@ build_react_app() {
 # Main
 #------------------------------------------------------------------------------
 main() {
-  log_section "🚀 Starting Agilery Portal Build"
+  log_section "Starting Agilery Portal Build"
   log_info "Start Time: $START_TIME"
   log_info "Working Directory: $(pwd)"
 
@@ -175,7 +204,7 @@ main() {
   update_package_json
   build_react_app
 
-  log_section "🎯 Build Process Completed"
+  log_section "Build Process Completed"
   log_info "App Version: $APP_VERSION"
   log_info "Logs saved at: $LOG_FILE"
 }
