@@ -124,7 +124,7 @@ generate_app_version() {
     exit 1
   fi
 
-  APP_VERSION=$(${./GET_VERSION_SCRIPT_PATH} "$BASE_VERSION" 2>>"$LOG_FILE") || {
+  APP_VERSION=$(${GET_VERSION_SCRIPT_PATH} "$BASE_VERSION" 2>>"$LOG_FILE") || {
     log_error "Failed to execute versioning script."
     exit 1
   }
