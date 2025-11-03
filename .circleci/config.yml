@@ -69,9 +69,7 @@ jobs:
       # --------------------------
       # AWS CLI Setup
       # --------------------------
-      - aws-cli/setup:
-          profile-name: default
-          region: AWS_REGIONĀ
+      - aws-cli/setup
 
       - run:
           name: Install Dependencies
