@@ -42,7 +42,7 @@ jobs:
           name: Debug directory structure
           command: |
             echo "Current directory structure:"
-            ls -alh
+            ls -lR
 
       - run:
           name: Build Application
