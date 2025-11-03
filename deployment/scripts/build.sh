@@ -15,6 +15,7 @@ APP_NAME="agilery-portal"
 ROOT_DIR=$(pwd)
 LOG_DIR="${ROOT_DIR}/logs"
 LOG_FILE="${LOG_DIR}/build_$(date '+%Y%m%d_%H%M%S').log"
+GET_VERSION_SCRIPT_PATH="${ROOT_DIR}/build-scripts/get_version.sh"
 START_TIME=$(date '+%Y-%m-%d %H:%M:%S')
 
 mkdir -p "$LOG_DIR"
@@ -35,7 +36,7 @@ handle_error() {
   local exit_code=$?
   local last_command="${BASH_COMMAND:-unknown}"
 
-  log_error "❌ Error occurred during build."
+  log_error "Error occurred during build."
   log_error "Last Command: '$last_command'"
   log_error "Exit Code: $exit_code"
   log_error "Working Directory: $(pwd)"
@@ -52,9 +53,9 @@ on_exit() {
   local code=$?
   local end_time=$(date '+%Y-%m-%d %H:%M:%S')
   if [[ $code -eq 0 ]]; then
-    log_info "✅ Build completed successfully at $end_time"
+    log_info "Build completed successfully at $end_time"
   else
-    log_error "❌ Build failed at $end_time (Exit code: $code)"
+    log_error "Build failed at $end_time (Exit code: $code)"
   fi
 }
 
@@ -118,12 +119,12 @@ generate_app_version() {
   log_info "Base version from package.json: $BASE_VERSION"
 
   # Check versioning script
-  if [[ ! -x "./build-scripts/get_version.sh" ]]; then
-    log_error "Missing versioning script: ./build-scripts/get_version.sh"
+  if [[ ! -x "${GET_VERSION_SCRIPT_PATH}" ]]; then
+    log_error "Missing versioning script: ${GET_VERSION_SCRIPT_PATH}"
     exit 1
   fi
 
-  APP_VERSION=$(./build-scripts/get_version.sh "$BASE_VERSION" 2>>"$LOG_FILE") || {
+  APP_VERSION=$(${./GET_VERSION_SCRIPT_PATH} "$BASE_VERSION" 2>>"$LOG_FILE") || {
     log_error "Failed to execute versioning script."
     exit 1
   }
@@ -184,7 +185,7 @@ build_react_app() {
 
   echo "$APP_VERSION" > dist/version.txt
   cp package.json dist/
-  log_info "✅ Build successful — version.txt generated inside dist/"
+  log_info "Build successful — version.txt generated inside dist/"
 }
 
 #------------------------------------------------------------------------------
