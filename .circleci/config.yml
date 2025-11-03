@@ -12,7 +12,7 @@ orbs:
 executors:
   default:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:25.1.0
 
 # --------------------------------------------------------
 # Jobs
