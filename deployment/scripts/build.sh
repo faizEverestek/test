@@ -15,7 +15,7 @@ APP_NAME="agilery-portal"
 ROOT_DIR=$(pwd)
 LOG_DIR="${ROOT_DIR}/logs"
 LOG_FILE="${LOG_DIR}/build_$(date '+%Y%m%d_%H%M%S').log"
-GET_VERSION_SCRIPT_PATH="${ROOT_DIR}/build-scripts/get_version.sh"
+GET_VERSION_SCRIPT_PATH="../../build-scripts/get_version.sh"
 START_TIME=$(date '+%Y-%m-%d %H:%M:%S')
 
 mkdir -p "$LOG_DIR"

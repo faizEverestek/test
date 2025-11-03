@@ -15,7 +15,7 @@ APP_NAME="agilery-portal"
 ROOT_DIR=$(pwd)
 LOG_DIR="${ROOT_DIR}/logs"
 LOG_FILE="${LOG_DIR}/deployment_$(date '+%Y%m%d_%H%M%S').log"
-SANITY_RESULT_FILE="terraform/sanity/sanity-result.txt"
+SANITY_RESULT_FILE="../../terraform/sanity/sanity-result.txt"
 
 #------------------------------------------------------------------------------#
 # Logging
