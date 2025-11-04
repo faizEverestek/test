@@ -32,23 +32,20 @@ jobs:
       - run:
           name: Install Dependencies
           command: |
-            # sudo apt-get update
-            # sudo apt-get install -y nodejs npm jq
-            # sudo apt-get install -y jq
-            # sudo npm install -g npm@latest
+            sudo apt-get install -y jq
             node -v
             npm -v
+      - run:
+          name: Ensure all scripts are executable
+          command: |
+            chmod +x deployment/scripts/*.sh
+
       - run:
           name: Build Application
           command: |
             echo "Starting build for environment: << parameters.env >>"
             chmod +x deployment/scripts/build.sh
             bash deployment/scripts/build.sh << parameters.env >>
-      
-      - run:
-          name: Give execution permission to all scripts
-          command: |
-            chmod +x deployment/scripts/*.sh
 
       - persist_to_workspace:
           root: .
