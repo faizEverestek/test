@@ -8,7 +8,10 @@ set -euo pipefail
 
 log_section() { echo -e "\n================== $* ==================\n"; }
 log_info() { echo -e "[INFO] $*"; }
-log_error() { echo -e "[ERROR] $*" >&2; }
+log_error() {
+  echo -e "[ERROR] $*"
+  exit 1
+}
 
 ENV=$1
 APP_NAME="agilery-portal"
