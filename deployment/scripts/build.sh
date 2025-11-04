@@ -15,8 +15,7 @@ APP_NAME="agilery-portal"
 ROOT_DIR=$(pwd)
 LOG_DIR="${ROOT_DIR}/logs"
 LOG_FILE="${LOG_DIR}/build_$(date '+%Y%m%d_%H%M%S').log"
-GET_VERSION_SCRIPT_PATH="$(pwd)../../build-scripts/get_version.sh"
-echo "$(realpath ${GET_VERSION_SCRIPT_PATH})"
+GET_VERSION_SCRIPT_PATH="$(pwd)/deployment/scripts/get_version.sh"
 START_TIME=$(date '+%Y-%m-%d %H:%M:%S')
 
 mkdir -p "$LOG_DIR"
@@ -125,7 +124,7 @@ generate_app_version() {
     exit 1
   fi
 
-  APP_VERSION=$(${GET_VERSION_SCRIPT_PATH} "$BASE_VERSION" 2>>"$LOG_FILE") || {
+  APP_VERSION=$(bash ${GET_VERSION_SCRIPT_PATH} "$BASE_VERSION" 2>>"$LOG_FILE") || {
     log_error "Failed to execute versioning script."
     exit 1
   }
