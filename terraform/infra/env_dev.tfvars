@@ -1,0 +1,10 @@
+aws_account_id                      = "471624149261"
+aws_region                          = "ap-south-1"
+environment                         = "dev"
+app_name                            = "agilery-portal"
+infra_version                       = "v1"
+product_name                        = "agilery"
+ssl_support_method                  = "sni-only"
+protocol_version                    = "TLSv1.2_2021"
+aws_cloudfront_distribution_aliases = ["portal.dev.agilery.ai"]
+dns_zone_id                         = "Z03225932066CDSNLXWDP"

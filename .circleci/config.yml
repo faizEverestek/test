@@ -1,0 +1,66 @@
+version: 2.1
+
+# --------------------------------------------------------
+# Orbs
+# --------------------------------------------------------
+orbs:
+  aws-cli: circleci/aws-cli@5.4.1
+
+# --------------------------------------------------------
+# Executors
+# --------------------------------------------------------
+executors:
+  default:
+    docker:
+      - image: cimg/node:25.1.0
+
+# --------------------------------------------------------
+# Jobs
+# --------------------------------------------------------
+jobs:
+  # ------------------------------
+  # Build Job
+  # ------------------------------
+  build:
+    executor: default
+    parameters:
+      env:
+        description: The deployment environment (e.g., dev, prd)
+        type: string
+    steps:
+      - checkout
+
+      - run:
+          name: Install Dependencies
+          command: |
+            sudo apt-get install -y jq
+            npm i
+      - run:
+          name: Ensure all scripts are executable
+          command: |
+            chmod +x deployment/scripts/*.sh
+
+      - run:
+          name: Build Application
+          command: |
+            bash deployment/scripts/build.sh << parameters.env >>
+
+      - persist_to_workspace:
+          root: .
+          paths:
+            - logs/
+            - dist/
+            - package.json
+
+workflows:
+  version: 2
+
+  # --------------------------------------------------------
+  # Dev Workflow
+  # --------------------------------------------------------
+  build_deploy_dev:
+    jobs:
+      - build:
+          name: build-dev
+          env: "dev"
+          context: agilery-dev-context
