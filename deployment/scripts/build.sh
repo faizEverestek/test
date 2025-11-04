@@ -24,10 +24,10 @@ touch "$LOG_FILE"
 #------------------------------------------------------------------------------
 # Logging Functions
 #------------------------------------------------------------------------------
-log_info()    { echo -e "[INFO]  $*" | tee -a "$LOG_FILE"; }
-log_warn()    { echo -e "[WARN]  $*" | tee -a "$LOG_FILE"; }
-log_error()   { echo -e "[ERROR] $*" | tee -a "$LOG_FILE" >&2; }
-log_section() { echo -e "\n================== $* ==================\n" | tee -a "$LOG_FILE"; }
+log_info()    { echo -e "[INFO]  $*" 2>&1 | tee -a "$LOG_FILE"; }
+log_warn()    { echo -e "[WARN]  $*" 2>&1 | tee -a "$LOG_FILE"; }
+log_error()   { echo -e "[ERROR] $*" 2>&1 | tee -a "$LOG_FILE" >&2; }
+log_section() { echo -e "\n================== $* ==================\n" 2>&1 | tee -a "$LOG_FILE"; }
 
 #------------------------------------------------------------------------------
 # Error & Exit Handling

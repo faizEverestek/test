@@ -22,9 +22,9 @@ LOG_FILE="${LOG_DIR}/main_$(date '+%Y%m%d_%H%M%S').log"
 mkdir -p "$LOG_DIR"
 touch "$LOG_FILE"
 
-log_info()    { echo -e "[INFO]  $*" | tee -a "$LOG_FILE"; }
-log_error()   { echo -e "[ERROR] $*" | tee -a "$LOG_FILE" >&2; }
-log_section() { echo -e "\n================== $* ==================\n" | tee -a "$LOG_FILE"; }
+log_info()    { echo -e "[INFO]  $*" 2>&1 | tee -a  "$LOG_FILE"; }
+log_error()   { echo -e "[ERROR] $*" 2>&1 | tee -a  "$LOG_FILE" >&2; }
+log_section() { echo -e "\n================== $* ==================\n" 2>&1 | tee -a  "$LOG_FILE"; }
 
 #------------------------------------------------------------------------------#
 # Help Menu
@@ -77,11 +77,11 @@ main() {
 
   # Step 1: Build
   log_section "Running Build Phase"
-  bash "${SCRIPT_DIR}/build.sh" "$ENV" | tee -a "$LOG_FILE"
+  bash "${SCRIPT_DIR}/build.sh" "$ENV" 2>&1 | tee -a  "$LOG_FILE"
 
   # Step 2: Deployment
   log_section "Running Deployment Phase"
-  bash "${SCRIPT_DIR}/deploy.sh" "$ENV" | tee -a "$LOG_FILE"
+  bash "${SCRIPT_DIR}/deploy.sh" "$ENV" 2>&1 | tee -a  "$LOG_FILE"
 
   log_section "Build & Deployment Completed Successfully"
 }

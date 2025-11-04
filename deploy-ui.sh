@@ -26,10 +26,10 @@ touch "$LOG_FILE"
 #------------------------------------------------------------------------------
 # Logging Functions
 #------------------------------------------------------------------------------
-log_info()    { echo -e "[INFO]  $*" | tee -a "$LOG_FILE"; }
-log_warn()    { echo -e "[WARN]  $*" | tee -a "$LOG_FILE"; }
-log_error()   { echo -e "[ERROR] $*" | tee -a "$LOG_FILE" >&2; }
-log_section() { echo -e "\n================== $* ==================\n" | tee -a "$LOG_FILE"; }
+log_info()    { echo -e "[INFO]  $*" 2>&1 | tee -a "$LOG_FILE"; }
+log_warn()    { echo -e "[WARN]  $*" 2>&1 | tee -a "$LOG_FILE"; }
+log_error()   { echo -e "[ERROR] $*" 2>&1 | tee -a "$LOG_FILE" >&2; }
+log_section() { echo -e "\n================== $* ==================\n" 2>&1 | tee -a "$LOG_FILE"; }
 
 #------------------------------------------------------------------------------
 # Help Menu
@@ -105,7 +105,7 @@ build_react_app() {
   log_section "Building React Application"
 
   rm -rf dist || true
-  npm run build 2>&1 | tee -a "$LOG_FILE"
+  npm run build 2>&1 2>&1 | tee -a "$LOG_FILE"
 
   echo "$APP_VERSION" > dist/version.txt
   cp package.json dist
@@ -129,9 +129,9 @@ run_terraform() {
   VAR_FILE="env_${env}.tfvars"
   BACKEND_CONFIG="backend_${env}.hcl"
 
-  terraform init -reconfigure -backend-config="$BACKEND_CONFIG" | tee -a "$LOG_FILE"
-  terraform fmt | tee -a "$LOG_FILE"
-  terraform validate | tee -a "$LOG_FILE"
+  terraform init -reconfigure -backend-config="$BACKEND_CONFIG" 2>&1 | tee -a "$LOG_FILE"
+  terraform fmt 2>&1 | tee -a "$LOG_FILE"
+  terraform validate 2>&1 | tee -a "$LOG_FILE"
 
   # Build the dynamic variable arguments string
   local var_args=()
@@ -141,10 +141,10 @@ run_terraform() {
 
   log_info "Running Terraform Plan with vars: ${extra_vars[*]:-(none)}"
 
-  terraform plan -var-file="$VAR_FILE" "${var_args[@]}" | tee -a "$LOG_FILE"
+  terraform plan -var-file="$VAR_FILE" "${var_args[@]}" 2>&1 | tee -a "$LOG_FILE"
 
   log_info "Running Terraform Apply with vars: ${extra_vars[*]:-(none)}"
-  terraform apply -auto-approve -var-file="$VAR_FILE" "${var_args[@]}" | tee -a "$LOG_FILE"
+  terraform apply -auto-approve -var-file="$VAR_FILE" "${var_args[@]}" 2>&1 | tee -a "$LOG_FILE"
 
   cd - >/dev/null
 }
@@ -162,9 +162,9 @@ run_sanity_check() {
 
   CLOUDFRONT_DOMAIN_NAME="d1i1eokyxlrfiy.cloudfront.net"
 
-  echo 'FAILED' > sanity-result.txt | tee -a "$LOG_FILE" && \
-  ./sanity.sh --app-name ${APP_NAME} --app-version ${APP_VERSION} --cloudfront ${CLOUDFRONT_DOMAIN_NAME} | tee -a "$LOG_FILE" && \
-  echo 'SUCCESS' > sanity-result.txt | tee -a "$LOG_FILE"
+  echo 'FAILED' > sanity-result.txt 2>&1 | tee -a "$LOG_FILE" && \
+  ./sanity.sh --app-name ${APP_NAME} --app-version ${APP_VERSION} --cloudfront ${CLOUDFRONT_DOMAIN_NAME} 2>&1 | tee -a "$LOG_FILE" && \
+  echo 'SUCCESS' > sanity-result.txt 2>&1 | tee -a "$LOG_FILE"
 
   cd - >/dev/null
 }
@@ -207,7 +207,7 @@ main() {
 
   # Step 4: Destroy Green Infra in all cases
   log_section "Destroying Green Infrastructure..."
-  (cd terraform/green && terraform destroy -auto-approve -var-file="env_${ENV}.tfvars" -var "enable_service=false") | tee -a "$LOG_FILE"
+  (cd terraform/green && terraform destroy -auto-approve -var-file="env_${ENV}.tfvars" -var "enable_service=false") 2>&1 | tee -a "$LOG_FILE"
 
   log_section "Deployment Process Completed"
 }

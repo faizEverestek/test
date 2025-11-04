@@ -26,13 +26,13 @@ log() {
   local message="$*"
   local timestamp
   timestamp=$(date '+%Y-%m-%d %H:%M:%S')
-  echo "[$timestamp] [$level] $message" | tee -a "$LOG_FILE"
+  echo "[$timestamp] [$level] $message" 2>&1 | tee -a  "$LOG_FILE"
 }
 
 log_info()    { log "INFO" "$*"; }
 log_warn()    { log "WARN" "$*"; }
 log_error()   { log "ERROR" "$*"; }
-log_section() { echo -e "\n========== $* ==========\n" | tee -a "$LOG_FILE"; }
+log_section() { echo -e "\n========== $* ==========\n" 2>&1 | tee -a  "$LOG_FILE"; }
 
 #------------------------------------------------------------------------------
 # Help Menu
