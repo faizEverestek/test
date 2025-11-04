@@ -11,7 +11,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Hello world
+          name: install system dependencies
           command: |
             sudo apt-get update
             sudo apt-get install -y nodejs npm jq
@@ -19,14 +19,8 @@ jobs:
             node -v
             npm -v
 
-#      - run:
-#          name: Debug directory structure
-#          command: |
-#            echo "Current directory structure:"
-#            ls -lR
-
       - run:
-          name: Build Application
+          name: Build Node Application
           command: |
             echo "Starting build for environment: << parameters.env >>"
             chmod +x deployment/scripts/build.sh
@@ -38,49 +32,6 @@ jobs:
             - logs/
             - dist/
             - package.json
-
-  # ------------------------------
-  # Deploy Job
-  # ------------------------------
-  deploy:
-    executor: default
-    parameters:
-      env:
-        type: string
-        default: "dev"
-      app_version:
-        type: string
-        default: ""
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-
-      # --------------------------
-      # AWS CLI Setup
-      # --------------------------
-      - aws-cli/setup
-
-      - run:
-          name: Install Dependencies
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y jq terraform
-
-      - run:
-          name: Deploy Application
-          command: |
-            echo "Starting deployment for environment: << parameters.env >>"
-            chmod +x deployment/scripts/deploy.sh
-
-            if [ "<< parameters.env >>" = "prd" ]; then
-              echo "Production environment detected."
-              echo "Using APP_VERSION from job parameter: << parameters.app_version >>"
-              export APP_VERSION="<< parameters.app_version >>"
-            fi
-
-            echo "App Version resolved: $APP_VERSION"
-            bash deployment/scripts/deploy.sh << parameters.env >>
 
 workflows:
   version: 2
