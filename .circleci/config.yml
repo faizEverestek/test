@@ -33,7 +33,11 @@ jobs:
       - run:
           name: Install Dependencies
           command: |
+<<<<<<< Updated upstream
             sudo apt-get install -y jq
+=======
+            sudo apt-get install -y jq terraform
+>>>>>>> Stashed changes
             npm i
       - run:
           name: Ensure all scripts are executable
@@ -52,6 +56,41 @@ jobs:
             - dist/
             - package.json
 
+<<<<<<< Updated upstream
+=======
+  # ------------------------------
+  # Deploy Job
+  # ------------------------------
+  deploy:
+    executor: default
+    parameters:
+      env:
+        type: string
+        default: "dev"
+      app_version:
+        type: string
+        default: ""
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+
+      # --------------------------
+      # AWS CLI Setup
+      # --------------------------
+      - aws-cli/setup
+
+      - run:
+          name: Deploy Application
+          command: |
+            if [ "<< parameters.env >>" = "prd" ]; then
+              export APP_VERSION="<< parameters.app_version >>"
+            fi
+
+            echo "App Version resolved: $APP_VERSION"
+            bash deployment/scripts/deploy.sh << parameters.env >>
+
+>>>>>>> Stashed changes
 workflows:
   version: 2
 
@@ -64,3 +103,13 @@ workflows:
           name: build-dev
           env: "dev"
           context: agilery-dev-context
+<<<<<<< Updated upstream
+=======
+
+      - deploy:
+          name: deploy-dev
+          env: "dev"
+          context: agilery-dev-context
+          requires:
+            - build-dev
+>>>>>>> Stashed changes
