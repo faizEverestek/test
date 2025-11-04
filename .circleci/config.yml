@@ -8,12 +8,8 @@ executors:
 jobs:
   build:
     executor: default
-    parameters:
-      env:
-        type: string
     steps:
       - checkout
-
       - run:
           name: Hello world
           command: |
