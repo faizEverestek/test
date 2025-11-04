@@ -13,9 +13,9 @@ executors:
   build:
     docker:
       - image: cimg/node:25.1.0
-  terraform-executor:
+  deploy:
     docker:
-      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
+      - image: cimg/deploy:2025.01
 
 # --------------------------------------------------------
 # Jobs
@@ -59,7 +59,7 @@ jobs:
   # Deploy Job
   # ------------------------------
   deploy:
-    executor: terraform-executor
+    executor: deploy
     parameters:
       env:
         type: string
