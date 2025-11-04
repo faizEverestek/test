@@ -10,9 +10,12 @@ orbs:
 # Executors
 # --------------------------------------------------------
 executors:
-  default:
+  build:
     docker:
       - image: cimg/node:25.1.0
+  terraform-executor:
+    docker:
+      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
 
 # --------------------------------------------------------
 # Jobs
@@ -22,7 +25,7 @@ jobs:
   # Build Job
   # ------------------------------
   build:
-    executor: default
+    executor: build
     parameters:
       env:
         description: The deployment environment (e.g., dev, prd)
@@ -33,7 +36,7 @@ jobs:
       - run:
           name: Install Dependencies
           command: |
-            sudo apt-get install -y jq terraform
+            sudo apt-get install -y jq
             npm i
       - run:
           name: Ensure all scripts are executable
@@ -56,7 +59,7 @@ jobs:
   # Deploy Job
   # ------------------------------
   deploy:
-    executor: default
+    executor: terraform-executor
     parameters:
       env:
         type: string
