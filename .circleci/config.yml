@@ -44,6 +44,11 @@ jobs:
             echo "Starting build for environment: << parameters.env >>"
             chmod +x deployment/scripts/build.sh
             bash deployment/scripts/build.sh << parameters.env >>
+      
+      - run:
+          name: Give execution permission to all scripts
+          command: |
+            chmod +x deployment/scripts/*.sh
 
       - persist_to_workspace:
           root: .
