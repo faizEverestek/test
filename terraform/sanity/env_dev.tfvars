@@ -1,5 +1,0 @@
-aws_account_id = "471624149261"
-aws_region     = "ap-south-1"
-environment    = "dev"
-app_name       = "agilery-portal"
-product_name  = "agilery"
