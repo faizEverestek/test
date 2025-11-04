@@ -38,6 +38,7 @@ jobs:
           command: |
             sudo apt-get install -y jq
             npm i
+      
       - run:
           name: Ensure all scripts are executable
           command: |
@@ -69,6 +70,7 @@ jobs:
         default: ""
     steps:
       - checkout
+      
       - attach_workspace:
           at: .
 
@@ -76,6 +78,11 @@ jobs:
       # AWS CLI Setup
       # --------------------------
       - aws-cli/setup
+
+      - run:
+          name: Ensure all scripts are executable
+          command: |
+            chmod +x $(find . -type f -name "*.sh")
 
       - run:
           name: Deploy Application
