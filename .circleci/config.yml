@@ -1,26 +1,11 @@
 version: 2.1
 
-# --------------------------------------------------------
-# Orbs
-# --------------------------------------------------------
-orbs:
-  aws-cli: circleci/aws-cli@5.4.1
-
-# --------------------------------------------------------
-# Executors
-# --------------------------------------------------------
 executors:
   default:
     docker:
-      - image: cimg/node:25.1.0
+      - image: cimg/base:stable
 
-# --------------------------------------------------------
-# Jobs
-# --------------------------------------------------------
 jobs:
-  # ------------------------------
-  # Build Job
-  # ------------------------------
   build:
     executor: default
     parameters:
@@ -30,111 +15,13 @@ jobs:
       - checkout
 
       - run:
-          name: Install Dependencies
+          name: Hello world
           command: |
-            sudo apt-get update
-            sudo apt-get install -y nodejs npm jq
-            sudo npm install -g npm@latest
-            node -v
-            npm -v
-
-      - run:
-          name: Debug directory structure
-          command: |
-            echo "Current directory structure:"
-            ls -lR
-
-            echo "$(pwd)"
-            echo "$(pwd)/build-scripts/get_version.sh"
-            realpath build-scripts/get_version.sh
-
-      - run:
-          name: Build Application
-          command: |
-            echo "Starting build for environment: << parameters.env >>"
-            chmod +x deployment/scripts/build.sh
-            bash deployment/scripts/build.sh << parameters.env >>
-
-      - persist_to_workspace:
-          root: .
-          paths:
-            - logs/
-            - dist/
-            - package.json
-
-  # ------------------------------
-  # Deploy Job
-  # ------------------------------
-  deploy:
-    executor: default
-    parameters:
-      env:
-        type: string
-        default: "dev"
-      app_version:
-        type: string
-        default: ""
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-
-      # --------------------------
-      # AWS CLI Setup
-      # --------------------------
-      - aws-cli/setup
-
-      - run:
-          name: Install Dependencies
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y jq terraform
-
-      - run:
-          name: Deploy Application
-          command: |
-            echo "Starting deployment for environment: << parameters.env >>"
-            chmod +x deployment/scripts/deploy.sh
-
-            if [ "<< parameters.env >>" = "prd" ]; then
-              echo "Production environment detected."
-              echo "Using APP_VERSION from job parameter: << parameters.app_version >>"
-              export APP_VERSION="<< parameters.app_version >>"
-            fi
-
-            echo "App Version resolved: $APP_VERSION"
-            bash deployment/scripts/deploy.sh << parameters.env >>
+            echo "This is a test config file for circle ci"
 
 workflows:
   version: 2
-
-  # --------------------------------------------------------
-  # Dev Workflow
-  # --------------------------------------------------------
-  build_deploy_dev:
+  build-and-deploy:
     jobs:
       - build:
-          name: build-dev
-          env: "dev"
-          context: agilery-dev-context
-
-      - deploy:
-          name: deploy-dev
-          env: "dev"
-          context: agilery-dev-context
-          requires:
-            - build-dev
-
-  # --------------------------------------------------------
-  # Production Workflow
-  # --------------------------------------------------------
-  build_deploy_prd:
-    jobs:
-      - deploy:
-          name: deploy-prd
-          env: "prd"
-          context: agilery-prd-context
-          app_version: #CHANGE_ME : replace with latest dev app version
-          filters:
-            branches:
-              only: production
+          name: build
