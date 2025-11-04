@@ -26,6 +26,7 @@ jobs:
   # ------------------------------
   build:
     executor: build
+    description: "Build the application for a given environment"
     parameters:
       env:
         description: The deployment environment (e.g., dev, prd)
@@ -38,7 +39,7 @@ jobs:
           command: |
             sudo apt-get install -y jq
             npm i
-      
+
       - run:
           name: Ensure all scripts are executable
           command: |
@@ -61,16 +62,19 @@ jobs:
   # ------------------------------
   deploy:
     executor: deploy
+    description: "Deploy the application to a given environment"
     parameters:
       env:
         type: string
+        description: "The deployment environment (e.g., dev, prd)"
         default: "dev"
       app_version:
         type: string
+        description: "The application version to deploy (required for prd)"
         default: ""
     steps:
       - checkout
-      
+
       - attach_workspace:
           at: .
 
@@ -106,6 +110,10 @@ workflows:
           name: build-dev
           env: "dev"
           context: agilery-dev-context
+          # filters:
+          #   branches:
+          #     only:
+          #       - main
 
       - deploy:
           name: deploy-dev
@@ -113,3 +121,22 @@ workflows:
           context: agilery-dev-context
           requires:
             - build-dev
+          # filters:
+          #   branches:
+          #     only:
+          #       - main
+
+  # --------------------------------------------------------
+  # Dev Workflow
+  # --------------------------------------------------------
+  build_deploy_prd:
+    jobs:
+      - deploy:
+          name: deploy-prd
+          env: "prd"
+          context: agilery-prd-context
+          app_version: # CHANGE_ME : replace with latest app version
+          filters:
+            tags:
+              only:
+                - /^prd-release-.*$/

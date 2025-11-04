@@ -21,7 +21,7 @@ run_terraform() {
   terraform validate
 
   if [[ "$action" == "destroy" ]]; then
-    terraform destroy -auto-approve -var-file="env_${env}.tfvars" -var "enable_service=false"
+    terraform apply -auto-approve -var-file="env_${env}.tfvars" -var "enable_service=false"
   else
     terraform apply -auto-approve -var-file="env_${env}.tfvars"
   fi
