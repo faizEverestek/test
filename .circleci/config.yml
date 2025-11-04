@@ -8,6 +8,10 @@ executors:
 jobs:
   build:
     executor: default
+    parameters:
+      env:
+        description: "Deployment environment (e.g., dev, prd)"
+        type: string
     steps:
       - checkout
       - run:
