@@ -137,6 +137,9 @@ workflows:
           context: agilery-prd-context
           app_version: # CHANGE_ME : replace with latest app version
           filters:
+            branches:
+              only:
+                - main
             tags:
               only:
                 - /^prd-release-.*$/

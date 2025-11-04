@@ -80,7 +80,6 @@ main() {
     fi
   fi
 
-  exit
   # Step 5: Destroy Green in all cases
   log_section "Destroying Green Infrastructure"
   bash deployment/scripts/green.sh "$ENV" destroy 2>&1 | tee -a  "$LOG_FILE"
