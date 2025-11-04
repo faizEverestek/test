@@ -19,6 +19,7 @@ APP_VERSION=$(jq -r '.app_version' package.json)
 ROOT_DIR=$(pwd)
 CLOUDFRONT_DOMAIN="d1i1eokyxlrfiy.cloudfront.net"
 SANITY_RESULT_FILE="${ROOT_DIR}/terraform/sanity/sanity-result.txt"
+echo "$SANITY_RESULT_FILE"
 
 mkdir -p "$(dirname "$SANITY_RESULT_FILE")"
 
