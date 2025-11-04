@@ -42,7 +42,7 @@ jobs:
           name: Ensure all scripts are executable
           command: |
             chmod +x deployment/scripts/*.sh
-            # chmod +x terraform/sanity/sanity.sh
+            chmod +x terraform/sanity/sanity.sh
 
       - run:
           name: Build Application
